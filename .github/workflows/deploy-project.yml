@@ -1,0 +1,27 @@
+name: 'Deploy to Terraform - Development'
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+  actions: write
+
+jobs:
+  deploy:
+    uses: team-tech-challenge/terraform-reusable-actions/.github/workflows/create-resources-with-terraform.yml@main
+    with:
+      environment: 'production'
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+      TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+      TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+      TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
