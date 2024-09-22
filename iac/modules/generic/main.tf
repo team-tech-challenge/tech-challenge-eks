@@ -5,7 +5,7 @@
 #####################################
 
 module "aws_vpc" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_vpc?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_vpc?ref=feat/module_eks"
 
   create_vpc           = var.create_network_infrastructure
   vpc_cidr_block       = var.cidr_block
@@ -26,7 +26,7 @@ module "aws_vpc" {
 #####################################
 
 module "aws_subnets_public" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
 
   create_subnet       = var.create_network_infrastructure
   id_vpc              = module.aws_vpc.vpc_id
@@ -49,7 +49,7 @@ module "aws_subnets_public" {
 #####################################
 
 module "aws_subnets_privates" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
 
   create_subnet       = var.create_network_infrastructure
   id_vpc              = module.aws_vpc.vpc_id
@@ -71,7 +71,7 @@ module "aws_subnets_privates" {
 ###########################################
 
 module "aws_subnets_database" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
 
   create_subnet       = var.create_network_infrastructure
   id_vpc              = module.aws_vpc.vpc_id
@@ -92,7 +92,7 @@ module "aws_subnets_database" {
 #########################################
 
 module "aws_route_table" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=feat/module_eks"
 
   create_route_table  = var.create_network_infrastructure
   name_prefix         = "rtb-${var.name_prefix}"
@@ -113,7 +113,7 @@ module "aws_route_table" {
 ###############################################
 
 module "aws_route_table_database" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=feat/module_eks"
 
   create_route_table = var.create_network_infrastructure
   name_prefix        = "rtb-database-${var.name_prefix}"
@@ -131,7 +131,7 @@ module "aws_route_table_database" {
 #########################################
 
 module "aws_internet_gateway" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_internet_gateway?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_internet_gateway?ref=feat/module_eks"
 
   create_internet_gateway = var.create_network_infrastructure
   vpc_id                  = module.aws_vpc.vpc_id
@@ -146,7 +146,7 @@ module "aws_internet_gateway" {
 #########################################
 
 module "aws_nat_gateway" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_nat_gateway?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_nat_gateway?ref=feat/module_eks"
 
   create_nat_gateway = var.create_network_infrastructure
   name_prefix        = var.name_prefix
@@ -164,7 +164,7 @@ module "aws_nat_gateway" {
 #########################################
 
 module "network_acl_public" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
 
   create_network_acl        = var.create_network_infrastructure
   aws_net_acl_vpc_id        = module.aws_vpc.vpc_id
@@ -187,7 +187,7 @@ module "network_acl_public" {
 #########################################
 
 module "network_acl_private" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
 
   create_network_acl        = var.create_network_infrastructure
   aws_net_acl_vpc_id        = module.aws_vpc.vpc_id
@@ -210,7 +210,7 @@ module "network_acl_private" {
 #########################################
 
 module "network_acl_database" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
 
   create_network_acl        = var.create_network_infrastructure
   aws_net_acl_vpc_id        = module.aws_vpc.vpc_id
@@ -233,7 +233,7 @@ module "network_acl_database" {
 #########################################
 
 module "aws_security_group_public" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
 
   create_security_group = var.create_network_infrastructure
   name                  = "security-group-public-${var.name_prefix}"
@@ -256,7 +256,7 @@ module "aws_security_group_public" {
 #########################################
 
 module "aws_security_group_private" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
 
   create_security_group = var.create_network_infrastructure
   name                  = "security-group-private-${var.name_prefix}"
@@ -279,7 +279,7 @@ module "aws_security_group_private" {
 #########################################
 
 module "aws_security_group_database" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
 
   create_security_group = var.create_network_infrastructure
   name                  = "security-group-database-${var.name_prefix}"
@@ -302,7 +302,7 @@ module "aws_security_group_database" {
 #########################################
 
 module "aws_route53_zone_public" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=feat/module_eks"
 
   create_route53_zone = var.create_network_infrastructure
   zone_name           = var.route53_zone_name
@@ -320,7 +320,7 @@ module "aws_route53_zone_public" {
 #########################################
 
 module "aws_route53_zone_private" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=feat/module_eks"
 
   create_route53_zone = var.create_network_infrastructure
   zone_name           = var.route53_zone_name
@@ -340,7 +340,7 @@ module "aws_route53_zone_private" {
 #########################################
 
 module "aws_eks_cluster" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_eks_cluster?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_cluster?ref=feat/module_eks"
 
   create_aws_eks_cluster                    = var.create_aws_eks_cluster
   eks_cluster_name                          = var.eks_cluster_name
@@ -365,7 +365,7 @@ module "aws_eks_cluster" {
 #########################################
 #
 module "eks_cluster_addons" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_eks_addons?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_addons?ref=feat/module_eks"
 
   create_aws_eks_addon = var.create_aws_eks_cluster
 
@@ -406,7 +406,7 @@ module "eks_cluster_addons" {
 #########################################
 
 module "aws_eks_node_group" {
-  source = "git::git@github.com:team-tech-challenge/terraform-modules-remotes.git//aws_eks_node_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_node_group?ref=feat/module_eks"
 
   create_node_group    = var.create_aws_eks_cluster
   cluster_name         = module.aws_eks_cluster.eks_cluster_name
