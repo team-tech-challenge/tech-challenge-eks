@@ -19,10 +19,6 @@ module "cluster_eks" {
     "172.18.2.0/23",
     "172.18.4.0/23",
   ]
-  database_subnets = [
-    "172.18.6.0/23",
-    "172.18.8.0/23",
-  ]
 
   # Network ACL Configuration Public - Ingess
   public_network_acl_ingress_rules = [
@@ -72,32 +68,6 @@ module "cluster_eks" {
       to_port    = 0
     }
   ]
-
-  # Network ACL Configuration Databases - Ingress
-  databases_network_acl_ingress_rules = [
-    {
-      protocol    = "-1"
-      rule_no     = 100
-      action      = "allow"
-      cidr_block  = "0.0.0.0/0"
-      from_port   = 0
-      to_port     = 0
-      description = "Allow PostgreSQL"
-    }
-  ]
-
-  # Network ACL Configuration Databases - Egress
-  databases_network_acl_egress_rules = [
-    {
-      protocol   = "-1"
-      rule_no    = 100
-      action     = "allow"
-      cidr_block = "0.0.0.0/0"
-      from_port  = 0
-      to_port    = 0
-    }
-  ]
-
 
   # Security Groups Public - Inbound rules
   security_group_public_ingress_rules = [
@@ -255,27 +225,6 @@ module "cluster_eks" {
     }
   ]
 
-  # Security Groups Configuration Databases
-  security_group_databases_ingress_rules = [
-    {
-      from_port   = 5432
-      to_port     = 5432
-      protocol    = "tcp"
-      cidr_blocks = ["172.18.0.0/20"]
-      description = "Allow PostgreSQL"
-    }
-  ]
-
-  security_group_databases_egress_rules = [
-    {
-      from_port   = 0
-      to_port     = 65535
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "Allow all TCP connections to external destinations"
-    }
-  ]
-
   # EKS Cluster
   create_aws_eks_cluster                   = true
   eks_cluster_name                         = "cluster-tech-challenge"
@@ -287,7 +236,7 @@ module "cluster_eks" {
   scaling_desired_size = 2
   scaling_max_size     = 2
   scaling_min_size     = 2
-  instance_type        = "t3.micro"
+  instance_type        = "t3.large"
   force_update_version = true
   disk_size            = 70
 }
