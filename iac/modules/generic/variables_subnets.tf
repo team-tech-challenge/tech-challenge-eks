@@ -12,10 +12,3 @@ variable "private_subnets" {
   sensitive   = true
   default     = []
 }
-
-variable "database_subnets" {
-  description = "CIDR blocks for the database subnets"
-  type        = list(string)
-  sensitive   = true
-  default     = []
-}

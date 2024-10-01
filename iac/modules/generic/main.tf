@@ -5,7 +5,7 @@
 #####################################
 
 module "aws_vpc" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_vpc?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_vpc?ref=main"
 
   create_vpc           = var.create_network_infrastructure
   vpc_cidr_block       = var.cidr_block
@@ -26,7 +26,7 @@ module "aws_vpc" {
 #####################################
 
 module "aws_subnets_public" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=main"
 
   create_subnet       = var.create_network_infrastructure
   id_vpc              = module.aws_vpc.vpc_id
@@ -49,7 +49,7 @@ module "aws_subnets_public" {
 #####################################
 
 module "aws_subnets_privates" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=main"
 
   create_subnet       = var.create_network_infrastructure
   id_vpc              = module.aws_vpc.vpc_id
@@ -63,28 +63,6 @@ module "aws_subnets_privates" {
   depends_on = [module.aws_vpc]
 }
 
-
-###########################################
-#                                         #
-#      AWS Subnet Database Module         #
-#                                         #
-###########################################
-
-module "aws_subnets_database" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_subnets?ref=feat/module_eks"
-
-  create_subnet       = var.create_network_infrastructure
-  id_vpc              = module.aws_vpc.vpc_id
-  availability_zones  = data.aws_availability_zones.available.names
-  private_subnet_cidr = var.database_subnets
-  tags_subnets = merge({
-    "Name" = "subnet-database-${var.name_prefix}"
-  }, var.eks_tags)
-
-  depends_on = [module.aws_vpc]
-}
-
-
 #########################################
 #                                       #
 #         AWS Route Table Module        #
@@ -92,7 +70,7 @@ module "aws_subnets_database" {
 #########################################
 
 module "aws_route_table" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=main"
 
   create_route_table  = var.create_network_infrastructure
   name_prefix         = "rtb-${var.name_prefix}"
@@ -106,24 +84,6 @@ module "aws_route_table" {
   depends_on = [module.aws_vpc, module.aws_internet_gateway, module.aws_nat_gateway, module.aws_subnets_public, module.aws_subnets_privates]
 }
 
-###############################################
-#                                             #
-#      AWS Route Table Database Module        #
-#                                             #
-###############################################
-
-module "aws_route_table_database" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route_table?ref=feat/module_eks"
-
-  create_route_table = var.create_network_infrastructure
-  name_prefix        = "rtb-database-${var.name_prefix}"
-  vpc_id             = module.aws_vpc.vpc_id
-  private_subnet_ids = module.aws_subnets_database.private_subnets
-
-  depends_on = [module.aws_vpc, module.aws_subnets_database]
-}
-
-
 #########################################
 #                                       #
 #         AWS Internet Gateway          #
@@ -131,7 +91,7 @@ module "aws_route_table_database" {
 #########################################
 
 module "aws_internet_gateway" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_internet_gateway?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_internet_gateway?ref=main"
 
   create_internet_gateway = var.create_network_infrastructure
   vpc_id                  = module.aws_vpc.vpc_id
@@ -146,7 +106,7 @@ module "aws_internet_gateway" {
 #########################################
 
 module "aws_nat_gateway" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_nat_gateway?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_nat_gateway?ref=main"
 
   create_nat_gateway = var.create_network_infrastructure
   name_prefix        = var.name_prefix
@@ -164,7 +124,7 @@ module "aws_nat_gateway" {
 #########################################
 
 module "network_acl_public" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=main"
 
   create_network_acl        = var.create_network_infrastructure
   aws_net_acl_vpc_id        = module.aws_vpc.vpc_id
@@ -187,7 +147,7 @@ module "network_acl_public" {
 #########################################
 
 module "network_acl_private" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=main"
 
   create_network_acl        = var.create_network_infrastructure
   aws_net_acl_vpc_id        = module.aws_vpc.vpc_id
@@ -205,35 +165,12 @@ module "network_acl_private" {
 
 #########################################
 #                                       #
-#       AWS Network ACL Databases       #
-#                                       #
-#########################################
-
-module "network_acl_database" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_network_acl?ref=feat/module_eks"
-
-  create_network_acl        = var.create_network_infrastructure
-  aws_net_acl_vpc_id        = module.aws_vpc.vpc_id
-  aws_net_acl_subnet_ids    = module.aws_subnets_database.private_subnets
-  aws_net_acl_ingress_rules = var.databases_network_acl_ingress_rules
-  aws_net_acl_egress_rules  = var.databases_network_acl_egress_rules
-  aws_net_acl_tags = merge({
-    "Name" = "network-acl-database-${var.name_prefix}"
-    },
-    var.eks_tags
-  )
-
-  depends_on = [module.aws_vpc, module.aws_subnets_database]
-}
-
-#########################################
-#                                       #
 #       AWS Security Group Public       #
 #                                       #
 #########################################
 
 module "aws_security_group_public" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=main"
 
   create_security_group = var.create_network_infrastructure
   name                  = "security-group-public-${var.name_prefix}"
@@ -251,12 +188,12 @@ module "aws_security_group_public" {
 
 #########################################
 #                                       #
-#         AWS Security Group            #
+#      AWS Security Group Private       #
 #                                       #
 #########################################
 
 module "aws_security_group_private" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=main"
 
   create_security_group = var.create_network_infrastructure
   name                  = "security-group-private-${var.name_prefix}"
@@ -274,35 +211,12 @@ module "aws_security_group_private" {
 
 #########################################
 #                                       #
-#    AWS Security Group Databases       #
-#                                       #
-#########################################
-
-module "aws_security_group_database" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_security_group?ref=feat/module_eks"
-
-  create_security_group = var.create_network_infrastructure
-  name                  = "security-group-database-${var.name_prefix}"
-  description           = "Security Group for database in the cluster ${var.name_prefix}"
-  vpc_id                = module.aws_vpc.vpc_id
-  ingress_rules         = var.security_group_databases_ingress_rules
-  egress_rules          = var.security_group_databases_egress_rules
-
-  tags = merge(var.eks_tags, {
-    Name = "security-group-database-${var.name_prefix}"
-  })
-
-  depends_on = [module.aws_vpc]
-}
-
-#########################################
-#                                       #
 #        AWS Route53 Zone Public        #
 #                                       #
 #########################################
 
 module "aws_route53_zone_public" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=main"
 
   create_route53_zone = var.create_network_infrastructure
   zone_name           = var.route53_zone_name
@@ -320,7 +234,7 @@ module "aws_route53_zone_public" {
 #########################################
 
 module "aws_route53_zone_private" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_route53_zone?ref=main"
 
   create_route53_zone = var.create_network_infrastructure
   zone_name           = var.route53_zone_name
@@ -340,7 +254,7 @@ module "aws_route53_zone_private" {
 #########################################
 
 module "aws_eks_cluster" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_cluster?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_cluster?ref=main"
 
   create_aws_eks_cluster                    = var.create_aws_eks_cluster
   eks_cluster_name                          = var.eks_cluster_name
@@ -350,7 +264,6 @@ module "aws_eks_cluster" {
   eks_cluster_vpc_config_subnet_ids         = module.aws_subnets_privates.private_subnets
   eks_cluster_vpc_config_security_group_ids = [module.aws_security_group_private.security_group_id]
   eks_cluster_endpoint_public_access        = var.eks_cluster_endpoint_public_access
-
   eks_cluster_tags = merge(var.eks_tags, {
     Name = "eks-cluster-${var.name_prefix}"
   })
@@ -365,7 +278,7 @@ module "aws_eks_cluster" {
 #########################################
 #
 module "eks_cluster_addons" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_addons?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_addons?ref=main"
 
   create_aws_eks_addon = var.create_aws_eks_cluster
 
@@ -406,7 +319,7 @@ module "eks_cluster_addons" {
 #########################################
 
 module "aws_eks_node_group" {
-  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_node_group?ref=feat/module_eks"
+  source = "git::https://github.com/team-tech-challenge/terraform-modules-remotes.git//aws_eks_node_group?ref=main"
 
   create_node_group    = var.create_aws_eks_cluster
   cluster_name         = module.aws_eks_cluster.eks_cluster_name
@@ -425,4 +338,28 @@ module "aws_eks_node_group" {
   })
 
   depends_on = [module.aws_eks_cluster]
+}
+
+
+#########################################
+#                                       #
+#      AWS ARGOCD Application           #
+#                                       #
+#########################################
+
+resource "kubernetes_namespace" "this" {
+  metadata {
+    name = "argocd"
+  }
+}
+
+resource "helm_release" "this" {
+  name       = "argocd"
+  chart      = "argo-cd"
+  repository = "https://argoproj.github.io/argo-helm"
+  version    = "7.5.2"
+  namespace  = kubernetes_namespace.this.metadata.0.name
+  timeout    = "1200"
+
+  depends_on = [module.aws_eks_cluster, module.aws_eks_node_group, module.eks_cluster_addons]
 }
