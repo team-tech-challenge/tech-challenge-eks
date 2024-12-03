@@ -302,11 +302,20 @@ module "eks_cluster_addons" {
     vpc-cni = {
       cluster_name                = module.aws_eks_cluster.eks_cluster_name
       addon_name                  = "vpc-cni"
-      addon_version               = "v1.18.3-eksbuild.1"
+      addon_version               = "v1.19.0-eksbuild.1"
       configuration_values        = ""
       resolve_conflicts_on_create = "OVERWRITE"
       resolve_conflicts_on_update = "OVERWRITE"
-    }
+    },
+    ebs-cni = {
+      cluster_name                = module.aws_eks_cluster.eks_cluster_name
+      addon_name                  = "aws-ebs-csi-driver"
+      addon_version               = "v1.37.0-eksbuild.1"
+      configuration_values        = ""
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+    },
+
   }
 
   depends_on = [module.aws_eks_node_group]
@@ -345,7 +354,7 @@ module "aws_eks_node_group" {
 #                                       #
 #      AWS ARGOCD Application           #
 #                                       #
-#########################################
+########################################
 
 resource "kubernetes_namespace" "this" {
   metadata {
@@ -360,6 +369,7 @@ resource "helm_release" "this" {
   version    = "7.5.2"
   namespace  = kubernetes_namespace.this.metadata.0.name
   timeout    = "1200"
+  values     = [templatefile("./modules/argocd/values.yaml", {})]
 
   depends_on = [module.aws_eks_cluster, module.aws_eks_node_group, module.eks_cluster_addons]
 }
