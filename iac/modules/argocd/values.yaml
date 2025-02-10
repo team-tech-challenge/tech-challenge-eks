@@ -1,0 +1,32 @@
+nameOverride: argocd
+
+dex:
+  enabled: true
+
+configs:
+  params:
+    server.insecure: "true"
+    url: "https://argocd.techchallenge.com.br"
+    server.dex.server: "https://argocd-dex-server:5556"
+  cm:
+    url: "https://argocd.techchallenge.com.br"
+
+server:
+  webhook:
+    enabled: true
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-tech-challenge
+    ingressClassName: nginx-public
+    hostname: argocd.techchallenge.com.br
+    pathType: Prefix
+    path: /
+    backend:
+      serviceName: argocd-server
+      servicePort: 80
+    tls:
+      - hosts:
+          - argocd.techchallenge.com.br
+        secretName: argocd-tls
+
