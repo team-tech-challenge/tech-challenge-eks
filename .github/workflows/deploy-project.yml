@@ -1,17 +1,11 @@
 name: 'Deploy Resources in Production'
 
-#on:
-#  pull_request:
-#    types:
-#      - closed
-#    branches:
-#      - main
-
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
-
 
 permissions:
   contents: read
